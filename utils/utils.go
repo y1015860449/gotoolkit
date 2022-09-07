@@ -116,6 +116,10 @@ func RandomInt(begin, end int) int {
 	return rand.Intn(end-begin+1) + begin
 }
 
+func RandomInt64() int64 {
+	return rand.Int63()
+}
+
 // JsonDecoder json解析int64缺精度问题
 func JsonDecoder(data []byte, result interface{}) error {
 	dec := json.NewDecoder(bytes.NewReader(data))
