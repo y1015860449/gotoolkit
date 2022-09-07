@@ -10,6 +10,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/go-xorm/xorm v0.7.9
 	github.com/golang/protobuf v1.5.2
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/uuid v1.3.0
@@ -23,7 +24,6 @@ require (
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.1
 	github.com/tjfoc/gmsm v1.4.1
-	github.com/xormplus/xorm v0.0.0-20210822100304-4e1d4fcc1e67
 	github.com/zput/zxcTool v1.3.10
 	go.mongodb.org/mongo-driver v1.9.1
 	go.uber.org/zap v1.21.0
@@ -33,20 +33,11 @@ require (
 )
 
 require (
-	github.com/Chronokeeper/anyxml v0.0.0-20160530174208-54457d8e98c6 // indirect
-	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
-	github.com/CloudyKit/jet v2.1.2+incompatible // indirect
-	github.com/agrison/go-tablib v0.0.0-20160310143025-4930582c22ee // indirect
-	github.com/agrison/mxj v0.0.0-20160310142625-1269f8afb3b4 // indirect
-	github.com/bndr/gotabulate v1.1.2 // indirect
-	github.com/clbanning/mxj v1.8.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.2.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20180814174437-776d5712da21 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
-	github.com/fatih/structs v1.1.0 // indirect
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/mock v1.4.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -70,15 +61,12 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
-	github.com/syndtr/goleveldb v1.0.0 // indirect
-	github.com/tealeg/xlsx v1.0.5 // indirect
 	github.com/tidwall/gjson v1.2.1 // indirect
 	github.com/tidwall/match v1.0.1 // indirect
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
-	github.com/xormplus/builder v0.0.0-20200331055651-240ff40009be // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
@@ -89,9 +77,9 @@ require (
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
-	gopkg.in/flosch/pongo2.v3 v3.0.0-20141028000813-5e81b817a0c4 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	stathat.com/c/consistent v1.0.0 // indirect
+	xorm.io/builder v0.3.8 // indirect
+	xorm.io/core v0.7.2-0.20190928055935-90aeac8d08eb // indirect
 )

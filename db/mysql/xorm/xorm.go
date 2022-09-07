@@ -3,7 +3,7 @@ package xorm
 import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/xormplus/xorm"
+	"github.com/go-xorm/xorm"
 	"time"
 )
 
