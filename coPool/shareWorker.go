@@ -21,7 +21,7 @@ func newShareWork(id int64, pool *SharePool) *shareWorker {
 		pool: pool,
 	}
 	w.ctx, w.cancel = context.WithCancel(context.Background())
-	w.run()
+	go w.run()
 	return w
 }
 

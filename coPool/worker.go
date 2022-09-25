@@ -22,7 +22,7 @@ func newWork(id int64, pool *Pool) *worker {
 		pool:  pool,
 		tasks: make(chan *task, taskChanCap),
 	}
-	w.run()
+	go w.run()
 	return w
 }
 
