@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/gotoolkit/mq/rocketmq"
-	"github.com/gotoolkit/plugin/mq/broker"
-	rmq "github.com/gotoolkit/plugin/mq/rocketmq"
+	"github.com/y1015860449/gotoolkit/mq/rocketmq"
+	"github.com/y1015860449/gotoolkit/plugin/mq/broker"
+	rmq "github.com/y1015860449/gotoolkit/plugin/mq/rocketmq"
 	"log"
 )
 

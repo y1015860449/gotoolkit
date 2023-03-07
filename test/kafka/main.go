@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/gotoolkit/mq/kafka"
-	"github.com/gotoolkit/plugin/mq/broker"
+	"github.com/y1015860449/gotoolkit/mq/kafka"
+	"github.com/y1015860449/gotoolkit/plugin/mq/broker"
 	"log"
 )
 

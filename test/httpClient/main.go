@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gotoolkit/httpClient"
+	"github.com/y1015860449/gotoolkit/httpClient"
 	"log"
 )
 
