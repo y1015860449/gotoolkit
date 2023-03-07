@@ -18,7 +18,8 @@ func NewHttp() Http {
 
 func (h *httpCli) PostBytes(url string, headers map[string]string, data []byte) ([]byte, int, error) {
 	setReq := func(req *resty.Request) {
-		req.SetHeader("Accept", "application/json")
+		req.SetHeader("Accept", "application/octet-stream")
+		req.SetHeader("Content-Type", "application/octet-stream")
 		if len(data) > 0 {
 			req.SetBody(data)
 		}

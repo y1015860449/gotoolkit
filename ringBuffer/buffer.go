@@ -8,10 +8,12 @@ import (
 type RingBuffer struct {
 	buffer  []byte
 	initCap int // 初始
-	cap     int
-	len     int
-	rd      int
-	wr      int
+	cap     int // 容量
+	len     int // 长度
+	rd      int // 读位置
+	wr      int // 写位置
+	vr      int // 虚位置
+	vrLen   int // 可虚度长度
 }
 
 func NewBuffer(size int) *RingBuffer {
@@ -22,6 +24,8 @@ func NewBuffer(size int) *RingBuffer {
 		len:     0,
 		rd:      0,
 		wr:      0,
+		vr:      0,
+		vrLen:   0,
 	}
 }
 
@@ -70,14 +74,19 @@ func (b *RingBuffer) ReadBuffer(data []byte) (int, error) {
 		}
 	}
 	b.rd = (b.rd + dataLen) % b.cap
+	b.vr = b.rd
 	b.len = b.len - dataLen
+	b.vrLen = b.len
 	return dataLen, nil
 }
 
+// 读取所有缓存
 func (b *RingBuffer) ReadAllBuffer() []byte {
 	data := b.GetBuffers()
 	b.rd = (b.rd + b.len) % b.cap
+	b.vr = b.rd
 	b.len = 0
+	b.vrLen = b.len
 	return data
 }
 
@@ -102,10 +111,12 @@ func (b *RingBuffer) WriteBuffer(data []byte) (int, error) {
 		copy(b.buffer[b.wr:], data)
 	}
 	b.len = b.len + dataLen
+	b.vrLen = b.len
 	b.wr = (b.wr + dataLen) % b.cap
 	return dataLen, nil
 }
 
+// 扩展buffer
 func (b *RingBuffer) expandCapacity(len int) {
 	newCap := 0
 	for newCap < len+b.cap {
@@ -125,7 +136,9 @@ func (b *RingBuffer) makeCapacity(cap int) {
 	b.buffer = newBuffer
 	b.wr = bufLen
 	b.rd = 0
+	b.vr = 0
 	b.len = bufLen
+	b.vrLen = b.len
 	b.cap = cap
 }
 
@@ -133,17 +146,21 @@ func (b *RingBuffer) makeCapacity(cap int) {
 func (b *RingBuffer) RetrieveAll() {
 	b.rd = 0
 	b.wr = 0
+	b.vr = 0
 	b.len = 0
+	b.vrLen = 0
 }
 
 // Retrieve 移动读取位置
-func (b *RingBuffer) Retrieve(len int) {
-	if b.IsEmpty() || len <= 0 {
+func (b *RingBuffer) Retrieve(length int) {
+	if b.IsEmpty() || length <= 0 {
 		return
 	}
-	if len < b.len {
-		b.rd = (b.rd + len) % b.cap
-		b.len = b.len - len
+	if length < b.len {
+		b.rd = (b.rd + length) % b.cap
+		b.vr = b.rd
+		b.len = b.len - length
+		b.vrLen = b.len
 	} else {
 		b.RetrieveAll()
 	}
@@ -255,4 +272,46 @@ func (b *RingBuffer) GetBuffers() []byte {
 		copy(buf[b.cap-b.rd:], b.buffer[0:b.wr])
 	}
 	return buf
+}
+
+func (b *RingBuffer) VirtualRead(data []byte) (int, error) {
+	if b.IsEmpty() {
+		return 0, errors.New("buffer is empty")
+	}
+	dataLen := len(data)
+	if dataLen > b.vrLen {
+		dataLen = b.vrLen
+	}
+	if b.wr > b.vr {
+		copy(data, b.buffer[b.vr:b.vr+dataLen])
+	} else {
+		if b.vr+dataLen <= b.cap {
+			copy(data, b.buffer[b.vr:b.vr+dataLen])
+		} else {
+			// front
+			copy(data, b.buffer[b.vr:b.cap])
+			// tail
+			copy(data[b.cap-b.vr:], b.buffer[0:dataLen-b.cap+b.vr])
+		}
+	}
+	b.vr = (b.vr + dataLen) % b.cap
+	b.vrLen = b.vrLen - dataLen
+	return dataLen, nil
+}
+
+// 获取可虚读长度
+func (b *RingBuffer) VirtualLength() int {
+	return b.vrLen
+}
+
+// 还原虚读位置
+func (b *RingBuffer) VirtualRevert() {
+	b.vrLen = b.len
+	b.vr = b.rd
+}
+
+// 刷新虚读指针
+func (b *RingBuffer) VirtualFlush() {
+	b.rd = b.vr
+	b.len = b.vrLen
 }

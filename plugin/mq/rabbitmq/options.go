@@ -34,11 +34,6 @@ func DurableQueue() broker.SubscribeOption {
 	return setSubscribeOption(durableQueueKey{}, true)
 }
 
-// DurableExchange is an option to set the Exchange to be durable
-func DurableExchange() broker.Option {
-	return setBrokerOption(durableExchange{}, true)
-}
-
 // Headers adds headers used by the headers exchange
 func Headers(h map[string]interface{}) broker.SubscribeOption {
 	return setSubscribeOption(headersKey{}, h)
@@ -54,6 +49,25 @@ func RequeueOnError() broker.SubscribeOption {
 	return setSubscribeOption(requeueOnErrorKey{}, true)
 }
 
+type subscribeContextKey struct{}
+
+// SubscribeContext set the context for broker.SubscribeOption
+func SubscribeContext(ctx context.Context) broker.SubscribeOption {
+	return setSubscribeOption(subscribeContextKey{}, ctx)
+}
+
+type ackSuccessKey struct{}
+
+// AckOnSuccess will automatically acknowledge messages when no error is returned
+func AckOnSuccess() broker.SubscribeOption {
+	return setSubscribeOption(ackSuccessKey{}, true)
+}
+
+// DurableExchange is an option to set the Exchange to be durable
+func DurableExchange() broker.Option {
+	return setBrokerOption(durableExchange{}, true)
+}
+
 // ExchangeName is an option to set the ExchangeName
 func ExchangeName(e string) broker.Option {
 	return setBrokerOption(exchangeKey{}, e)
@@ -67,6 +81,10 @@ func PrefetchCount(c int) broker.Option {
 // PrefetchGlobal creates a durable queue when subscribing.
 func PrefetchGlobal() broker.Option {
 	return setBrokerOption(prefetchGlobalKey{}, true)
+}
+
+func ExternalAuth() broker.Option {
+	return setBrokerOption(externalAuth{}, ExternalAuthentication{})
 }
 
 // DeliveryMode sets a delivery mode for publishing
@@ -127,22 +145,4 @@ func UserID(value string) broker.PublishOption {
 // AppID sets a property application id for publishing
 func AppID(value string) broker.PublishOption {
 	return setPublishOption(appID{}, value)
-}
-
-func ExternalAuth() broker.Option {
-	return setBrokerOption(externalAuth{}, ExternalAuthentication{})
-}
-
-type subscribeContextKey struct{}
-
-// SubscribeContext set the context for broker.SubscribeOption
-func SubscribeContext(ctx context.Context) broker.SubscribeOption {
-	return setSubscribeOption(subscribeContextKey{}, ctx)
-}
-
-type ackSuccessKey struct{}
-
-// AckOnSuccess will automatically acknowledge messages when no error is returned
-func AckOnSuccess() broker.SubscribeOption {
-	return setSubscribeOption(ackSuccessKey{}, true)
 }

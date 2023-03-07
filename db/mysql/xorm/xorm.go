@@ -12,7 +12,7 @@ type MysqlConfig struct {
 	Database     string
 	Username     string
 	Password     string
-	Hostport     string
+	Hostport     int32
 	MaxIdleConns int
 	MaxOpenConns int
 	MaxLifeTime  int
@@ -20,7 +20,7 @@ type MysqlConfig struct {
 
 // Connect 单库连接
 func Connect(conf *MysqlConfig) (*xorm.Engine, error) {
-	source := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8", conf.Username, conf.Password, conf.Hostname[0], conf.Hostport, conf.Database)
+	source := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8", conf.Username, conf.Password, conf.Hostname[0], conf.Hostport, conf.Database)
 	db, err := xorm.NewEngine("mysql", source)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func Connect(conf *MysqlConfig) (*xorm.Engine, error) {
 func GroupConnect(conf *MysqlConfig) (*xorm.EngineGroup, error) {
 	var source []string
 	for _, host := range conf.Hostname {
-		s := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8", conf.Username, conf.Password, host, conf.Hostport, conf.Database)
+		s := fmt.Sprintf("%s:%s@(%s:%d)/%s?charset=utf8", conf.Username, conf.Password, host, conf.Hostport, conf.Database)
 		source = append(source, s)
 	}
 
