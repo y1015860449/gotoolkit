@@ -1,0 +1,19 @@
+// protoc -I . --go_out=. --go-grpc_out=:. *.proto
+
+syntax = "proto3";
+
+package hello;
+
+option go_package="./hello";
+
+message request {
+  string text = 1;
+}
+
+message response {
+  string result = 1;
+}
+
+service Hello {
+  rpc sayHello (request) returns (response);
+}

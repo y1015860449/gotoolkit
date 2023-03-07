@@ -1,0 +1,13 @@
+2023-01-16T18:04:20.623+0800	ERROR	cache/disk_cache.go:41	mkdir cacheDir failed,cacheDir:./nacos/cache\naming\public,err:%!(EXTRA *fs.PathError=mkdir D:\go_project\src\gotoolkit\discovery\hxnacos\./nacos/cache: The system cannot find the path specified.)
+2023-01-16T18:04:20.625+0800	WARN	naming_cache/service_info_holder.go:90	out of date data received, old-t: 1673863460806, new-t: 1673863460806
+2023-01-16T18:04:24.554+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:31.490+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:32.487+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:33.489+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:34.490+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:35.494+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:36.494+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:37.500+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:38.499+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:53.571+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
+2023-01-16T18:04:58.265+0800	WARN	naming_cache/service_info_holder.go:82	instance list is empty, updateCacheWhenEmpty is set to false, callback is not triggered. service name:nacos_hello
