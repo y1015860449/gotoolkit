@@ -17,12 +17,12 @@ func (e *ErrorDuplicateKey) Error() string {
 	return "ErrorDuplicateKey"
 }
 
-type EpoMongo struct {
+type HxMongo struct {
 	client *mongo.Client
 }
 
 // ConnectMongoDb https://docs.mongodb.com/manual/reference/connection-string/
-func ConnectMongoDb(mongoURI string, maxPoolSize uint64) (*EpoMongo, error) {
+func ConnectMongoDb(mongoURI string, maxPoolSize uint64) (*HxMongo, error) {
 	// 启用优先读取从节点的配置
 	opt := options.Client()
 	if rpf, err := readpref.New(readpref.SecondaryPreferredMode); err != nil {
@@ -43,30 +43,30 @@ func ConnectMongoDb(mongoURI string, maxPoolSize uint64) (*EpoMongo, error) {
 		log.Printf("ping mongo fail err(%v)/n", err)
 		return nil, err
 	}
-	return &EpoMongo{client: client}, nil
+	return &HxMongo{client: client}, nil
 }
 
-func (cli *EpoMongo) GetDatabase(dbName string) *mongo.Database {
+func (cli *HxMongo) GetDatabase(dbName string) *mongo.Database {
 	return cli.client.Database(dbName)
 }
 
-func (cli *EpoMongo) GetCollection(dbName, collName string) *mongo.Collection {
+func (cli *HxMongo) GetCollection(dbName, collName string) *mongo.Collection {
 	return cli.client.Database(dbName).Collection(collName)
 }
 
-func (cli *EpoMongo) CreateCollection(dbName, collName string) error {
+func (cli *HxMongo) CreateCollection(dbName, collName string) error {
 	return cli.client.Database(dbName).CreateCollection(context.Background(), collName)
 }
 
-func (cli *EpoMongo) CreateCollectionIndex(dbName, collName string, indexModels []mongo.IndexModel) ([]string, error) {
+func (cli *HxMongo) CreateCollectionIndex(dbName, collName string, indexModels []mongo.IndexModel) ([]string, error) {
 	return cli.client.Database(dbName).Collection(collName).Indexes().CreateMany(context.Background(), indexModels)
 }
 
-func (cli *EpoMongo) GetCollectionNames(dbName string) ([]string, error) {
+func (cli *HxMongo) GetCollectionNames(dbName string) ([]string, error) {
 	return cli.client.Database(dbName).ListCollectionNames(context.Background(), bson.D{})
 }
 
-func (cli *EpoMongo) HasCollection(dbName, collName string) (bool, error) {
+func (cli *HxMongo) HasCollection(dbName, collName string) (bool, error) {
 	collList, err := cli.client.Database(dbName).ListCollectionNames(context.Background(), bson.D{})
 	if err != nil {
 		return false, err
@@ -82,7 +82,7 @@ func (cli *EpoMongo) HasCollection(dbName, collName string) (bool, error) {
 }
 
 // InsertOne 这种需要创建唯一索引
-func (cli *EpoMongo) InsertOne(dbName, collName string, document interface{}) (interface{}, error) {
+func (cli *HxMongo) InsertOne(dbName, collName string, document interface{}) (interface{}, error) {
 	result, err := cli.client.Database(dbName).Collection(collName).InsertOne(context.Background(), document)
 	if err != nil {
 		log.Printf("insert one err(%v)", err)
@@ -97,7 +97,7 @@ func (cli *EpoMongo) InsertOne(dbName, collName string, document interface{}) (i
 	return result.InsertedID, nil
 }
 
-func (cli *EpoMongo) InsertMany(dbName string, collName string, documents []interface{}) ([]interface{}, error) {
+func (cli *HxMongo) InsertMany(dbName string, collName string, documents []interface{}) ([]interface{}, error) {
 	result, err := cli.client.Database(dbName).Collection(collName).InsertMany(context.Background(), documents)
 	if err != nil {
 		log.Printf("insert many err(%v)", err)
@@ -112,7 +112,7 @@ func (cli *EpoMongo) InsertMany(dbName string, collName string, documents []inte
 	return result.InsertedIDs, nil
 }
 
-func (cli *EpoMongo) Update(dbName string, collName string, filter interface{}, update interface{}, bMany bool) (interface{}, int64, error) {
+func (cli *HxMongo) Update(dbName string, collName string, filter interface{}, update interface{}, bMany bool) (interface{}, int64, error) {
 	var err error
 	var result *mongo.UpdateResult
 	collection := cli.client.Database(dbName).Collection(collName)
@@ -128,7 +128,7 @@ func (cli *EpoMongo) Update(dbName string, collName string, filter interface{}, 
 	return result.UpsertedID, result.ModifiedCount + result.UpsertedCount, nil
 }
 
-func (cli *EpoMongo) Replace(dbName string, collName string, filter interface{}, replacement interface{}) (interface{}, error) {
+func (cli *HxMongo) Replace(dbName string, collName string, filter interface{}, replacement interface{}) (interface{}, error) {
 	result, err := cli.client.Database(dbName).Collection(collName).ReplaceOne(context.Background(), filter, replacement)
 	if err != nil {
 		log.Print(err)
@@ -137,7 +137,7 @@ func (cli *EpoMongo) Replace(dbName string, collName string, filter interface{},
 	return result.UpsertedID, nil
 }
 
-func (cli *EpoMongo) Delete(dbName string, collName string, filter interface{}, bMany bool) (int64, error) {
+func (cli *HxMongo) Delete(dbName string, collName string, filter interface{}, bMany bool) (int64, error) {
 	var err error
 	var result *mongo.DeleteResult
 	collection := cli.client.Database(dbName).Collection(collName)
@@ -153,7 +153,7 @@ func (cli *EpoMongo) Delete(dbName string, collName string, filter interface{}, 
 	return result.DeletedCount, nil
 }
 
-func (cli *EpoMongo) Find(dbName string, collName string, filter interface{}, opts *options.FindOptions) (*mongo.Cursor, error) {
+func (cli *HxMongo) Find(dbName string, collName string, filter interface{}, opts *options.FindOptions) (*mongo.Cursor, error) {
 	var err error
 	var cur *mongo.Cursor
 	collection := cli.client.Database(dbName).Collection(collName)
@@ -172,7 +172,7 @@ func (cli *EpoMongo) Find(dbName string, collName string, filter interface{}, op
 	return cur, err
 }
 
-func (cli *EpoMongo) FindOne(dbName string, collName string, filter interface{}, opts *options.FindOneOptions) (*mongo.SingleResult, error) {
+func (cli *HxMongo) FindOne(dbName string, collName string, filter interface{}, opts *options.FindOneOptions) (*mongo.SingleResult, error) {
 	var rest *mongo.SingleResult
 	collection := cli.client.Database(dbName).Collection(collName)
 	if opts != nil {
@@ -186,7 +186,7 @@ func (cli *EpoMongo) FindOne(dbName string, collName string, filter interface{},
 	return rest, nil
 }
 
-func (cli *EpoMongo) Aggregate(dbName string, collName string, pipeline interface{}) (*mongo.Cursor, error) {
+func (cli *HxMongo) Aggregate(dbName string, collName string, pipeline interface{}) (*mongo.Cursor, error) {
 	var err error
 	var cursor *mongo.Cursor
 	if cursor, err = cli.client.Database(dbName).Collection(collName).Aggregate(context.Background(), pipeline); err != nil {
@@ -200,7 +200,7 @@ func (cli *EpoMongo) Aggregate(dbName string, collName string, pipeline interfac
 	return cursor, err
 }
 
-func (cli *EpoMongo) Count(dbName string, collName string, filter interface{}, opts *options.CountOptions) (int64, error) {
+func (cli *HxMongo) Count(dbName string, collName string, filter interface{}, opts *options.CountOptions) (int64, error) {
 	var err error
 	var count int64
 	collection := cli.client.Database(dbName).Collection(collName)
@@ -216,10 +216,10 @@ func (cli *EpoMongo) Count(dbName string, collName string, filter interface{}, o
 	return count, err
 }
 
-func (cli *EpoMongo) DeleteCollection(dbName, collName string) error {
+func (cli *HxMongo) DeleteCollection(dbName, collName string) error {
 	return cli.client.Database(dbName).Collection(collName).Drop(context.Background())
 }
 
-func (cli *EpoMongo) Transaction(ctx context.Context, fn func(mongo.SessionContext) error) error {
+func (cli *HxMongo) Transaction(ctx context.Context, fn func(mongo.SessionContext) error) error {
 	return cli.client.UseSession(ctx, fn)
 }
