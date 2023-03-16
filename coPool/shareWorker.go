@@ -26,16 +26,18 @@ func newShareWork(id int64, pool *SharePool) *shareWorker {
 }
 
 func (w *shareWorker) run() {
-	for {
-		select {
-		case t := <-w.pool.tasks:
-			w.exec(t)
-		case <-w.ctx.Done():
-			return
-		case <-w.pool.ctx.Done():
-			return
+	go func() {
+		for {
+			select {
+			case t := <-w.pool.tasks:
+				w.exec(t)
+			case <-w.ctx.Done():
+				return
+			case <-w.pool.ctx.Done():
+				return
+			}
 		}
-	}
+	}()
 }
 
 func (w *shareWorker) exec(t *task) {
