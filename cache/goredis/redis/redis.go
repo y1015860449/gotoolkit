@@ -63,6 +63,17 @@ func InitRedis(conf *RedisConfig) (*GoRedis, error) {
 	}
 }
 
+func (cli *GoRedis) Ping() bool {
+	value, err := cli.redCli.Ping().Result()
+	if err != nil {
+		return false
+	}
+	return value == "PONG"
+}
+
+//////////////////////////////////////////////////////////
+// key
+//////////////////////////////////////////////////////////
 func (cli *GoRedis) Exists(keys []string) (int64, error) {
 	return cli.redCli.Exists(keys...).Result()
 }
