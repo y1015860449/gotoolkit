@@ -320,6 +320,14 @@ func (cli *GoRedis) ZScore(key string, value string) (int64, error) {
 	return int64(rest), nil
 }
 
+func (cli *GoRedis) ZRem(key string, fields ...interface{}) (int64, error) {
+	rest, err := cli.redCli.ZRem(key, fields...).Result()
+	if err != nil {
+		return 0, err
+	}
+	return rest, nil
+}
+
 ////////////////////////////////////////
 // bitmap
 ////////////////////////////////////////
