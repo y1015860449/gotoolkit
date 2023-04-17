@@ -3,6 +3,7 @@ package redis
 import (
 	"errors"
 	"github.com/go-redis/redis"
+	"strconv"
 	"time"
 )
 
@@ -300,6 +301,22 @@ func (cli *GoRedis) ZAddsNX(key string, valueScore map[string]int64) (int64, err
 	return cli.redCli.ZAddNX(key, zScore...).Result()
 }
 
+func (cli *GoRedis) ZCard(key string) (int64, error) {
+	return cli.redCli.ZCard(key).Result()
+}
+
+func (cli *GoRedis) ZCount(key string, min, max int64) (int64, error) {
+	return cli.redCli.ZCount(key, strconv.FormatInt(min, 10), strconv.FormatInt(max, 10)).Result()
+}
+
+func (cli *GoRedis) ZRange(key string, start, end int64) ([]string, error) {
+	rest, err := cli.redCli.ZRange(key, start, end).Result()
+	if err != nil {
+		return nil, err
+	}
+	return rest, nil
+}
+
 func (cli *GoRedis) ZRangeWithScores(key string, start, end int64) (map[string]int64, error) {
 	rest, err := cli.redCli.ZRangeWithScores(key, start, end).Result()
 	if err != nil {
@@ -312,12 +329,47 @@ func (cli *GoRedis) ZRangeWithScores(key string, start, end int64) (map[string]i
 	return valueScore, nil
 }
 
-func (cli *GoRedis) ZScore(key string, value string) (int64, error) {
-	rest, err := cli.redCli.ZScore(key, value).Result()
-	if err != nil {
-		return 0, err
+func (cli *GoRedis) ZRangeByScore(key string, min, max int64) ([]string, error) {
+	opt := redis.ZRangeBy{
+		Min: strconv.FormatInt(min, 10),
+		Max: strconv.FormatInt(max, 10),
 	}
-	return int64(rest), nil
+	if min == -1 {
+		opt.Min = "-inf"
+	}
+	if max == -1 {
+		opt.Max = "+inf"
+	}
+	rest, err := cli.redCli.ZRangeByScore(key, opt).Result()
+	if err != nil {
+		return nil, err
+	}
+	return rest, nil
+}
+
+func (cli *GoRedis) ZRangeByScoreWithScores(key string, min, max int64) (map[string]int64, error) {
+	opt := redis.ZRangeBy{
+		Min: strconv.FormatInt(min, 10),
+		Max: strconv.FormatInt(max, 10),
+	}
+	if min == -1 {
+		opt.Min = "-inf"
+	}
+	if max == -1 {
+		opt.Max = "+inf"
+	}
+	rest, err := cli.redCli.ZRangeByScoreWithScores(key, redis.ZRangeBy{
+		Min: strconv.FormatInt(min, 10),
+		Max: strconv.FormatInt(max, 10),
+	}).Result()
+	if err != nil {
+		return nil, err
+	}
+	valueScore := make(map[string]int64, 0)
+	for _, v := range rest {
+		valueScore[v.Member.(string)] = int64(v.Score)
+	}
+	return valueScore, nil
 }
 
 func (cli *GoRedis) ZRem(key string, fields ...interface{}) (int64, error) {
@@ -326,6 +378,22 @@ func (cli *GoRedis) ZRem(key string, fields ...interface{}) (int64, error) {
 		return 0, err
 	}
 	return rest, nil
+}
+
+func (cli *GoRedis) ZRemRangeByScore(key string, min, max int64) (int64, error) {
+	rest, err := cli.redCli.ZRemRangeByScore(key, strconv.FormatInt(min, 10), strconv.FormatInt(max, 10)).Result()
+	if err != nil {
+		return 0, err
+	}
+	return rest, nil
+}
+
+func (cli *GoRedis) ZScore(key string, value string) (int64, error) {
+	rest, err := cli.redCli.ZScore(key, value).Result()
+	if err != nil {
+		return 0, err
+	}
+	return int64(rest), nil
 }
 
 ////////////////////////////////////////
