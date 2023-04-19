@@ -5,7 +5,8 @@ import "github.com/go-resty/resty/v2"
 type Http interface {
 	PostBytes(url string, headers map[string]string, data []byte) ([]byte, int, error)
 	PostForm(url string, headers map[string]string, data map[string]string) ([]byte, int, error)
-	PostJson(url string, headers map[string]string, data map[string]interface{}) ([]byte, int, error)
+	// data `string`, `[]byte`, `struct`, `map`, `slice`, `io.Reader`
+	PostJson(url string, headers map[string]string, data interface{}) ([]byte, int, error)
 	Get(url string, headers map[string]string, data map[string]string) ([]byte, int, error)
 }
 
@@ -37,10 +38,10 @@ func (h *httpCli) PostForm(url string, headers map[string]string, data map[strin
 	return httpPostDo(url, headers, setReq)
 }
 
-func (h *httpCli) PostJson(url string, headers map[string]string, data map[string]interface{}) ([]byte, int, error) {
+func (h *httpCli) PostJson(url string, headers map[string]string, data interface{}) ([]byte, int, error) {
 	setReq := func(req *resty.Request) {
 		req.SetHeader("Content-Type", "application/json")
-		if len(data) > 0 {
+		if data != nil {
 			req.SetBody(data)
 		}
 	}
